@@ -1,0 +1,4 @@
+/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/edit_cache.dir
+/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/rebuild_cache.dir
+/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir
+/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions_automoc.dir

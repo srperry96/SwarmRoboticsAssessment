@@ -23,11 +23,13 @@
                 <footbot_proximity implementation="default" show_rays="false"/>
                 <footbot_light implementation="rot_z_only" show_rays="false" />
                 <footbot_motor_ground implementation="rot_z_only" />
+                <range_and_bearing implementation="medium" medium="rab" />
             </sensors>
         
             <actuators>
                 <differential_steering implementation="default" />
                 <leds implementation="default" medium="leds" />
+                <range_and_bearing implementation="default" />
             </actuators>
 
             <params script="simple_foraging.lua" />
@@ -103,7 +105,7 @@
             <position method="uniform" min="-2,-2,0" max="-1,2,0" />
             <orientation method="uniform" min="0,0,0" max="360,0,0" />
             <entity quantity="10" max_trials="100">
-                <foot-bot id="fb">
+                <foot-bot id="fb" rab_range = "1">
                     <controller config="lua_controller" />
                 </foot-bot>
             </entity>
@@ -123,13 +125,14 @@
     <!-- ********* -->
     <media>
         <led id="leds" />
+        <range_and_bearing id="rab" index="grid" grid_size="1,1,1" />
     </media>
 
     <!-- ****************** -->
     <!-- * Visualization * -->
     <!-- ****************** -->
     <visualization>
-        <qt-opengl lua_editor="true">
+        <qt-opengl lua_editor="false">
             <camera>
                 <placement idx="0"
                            position="0,0,4.5"

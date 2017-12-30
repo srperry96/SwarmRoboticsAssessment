@@ -7,9 +7,6 @@ function init()
     -- WARNING: Do not write to these two variables!
     robot.has_food = false
     robot.food_value = 0
-
-    current_wait_steps = 0
-    robot.range_and_bearing.set_data(1,0)
 end
 
 function step()
@@ -26,8 +23,6 @@ function step()
         foraging()
     elseif robot.state == "returning" then
         returning()
-    elseif robot.state == "waiting" then
-        waiting()
     end
 
 end
@@ -40,30 +35,13 @@ function destroy()
 
 end
 
-function waiting()
-    if current_wait_steps > 0 then
-        --while waiting, broadcast food value
-        current_wait_steps = current_wait_steps - 1
-        robot.range_and_bearing.set_data(1, robot.food_value)
-    --finished waiting, so change state and stop broadcasting
-    else
-        robot.range_and_bearing.set_data(1,0)
-        robot.range_and_bearing.set_data(2,robot.food_value)
-        robot.leds.set_all_colors("green")
-        robot.state = "returning"
-    end
-end
-
 function foraging()
 
     -- If the robot has picked up a food item
     if robot.has_food then
-        robot.wheels.set_velocity(0,0)
-        robot.state = "waiting"
+        -- Set LEDs to green, and transition to returning state
         robot.leds.set_all_colors("green")
-        --robot wait steps is lower for lower food values
-        current_wait_steps = robot.food_value
-
+        robot.state = "returning"
     -- If the robot doesn't have a food item
     else
         -- If the robot is in the nest
@@ -72,9 +50,8 @@ function foraging()
             setWheelSpeedsFromVector(subtractVectors(getAvoidanceVector(), getLightVector()))
         -- If the robot is outside the nest
         else
-            setWheelSpeedsFromVector(addVectors(getAvoidanceVector(), getFoodSiteVector()))
-            ---- Just avoid obstacles
-            --setWheelSpeedsFromVector(getAvoidanceVector())
+            -- Just avoid obstacles
+            setWheelSpeedsFromVector(getAvoidanceVector())
         end
     end
 
@@ -87,8 +64,6 @@ function returning()
         -- Set LEDs to red, and transition to foraging state
         robot.leds.set_all_colors("red")
         robot.state = "foraging"
-        --reset range and bearing data
-        robot.range_and_bearing.set_data(2,0)
     -- If the robot has a food item
     else
         -- Perform phototaxis, while avoiding obstacles
@@ -138,36 +113,9 @@ function getLightVector()
 
 end
 
-function getFoodSiteVector()
-    local food_site_vector = {x = 0, y = 0}
-    local count = 0
-
-    for i = 1, #robot.range_and_bearing do
-        --if nest 15 is detected, set heading for that and break
-        if robot.range_and_bearing[i].data[1] == 15 then
-            food_site_vector = newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing)
-            count = -1
-            break
-        --if robots carrying food value 15 are detected, travel to centre of mass of them
-        elseif robot.range_and_bearing[i].data[2] == 15 then
-            count = count + 1
-            food_site_vector = addVectors(food_site_vector, newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing))
-        end
-    end
-
-    --if only one robot carrying food is detected, and two bots move towards it, they can end up
-    --trapping it in a corner. so dont follow a single robot. only move towards a group of bots
-    --with food
-    if count == 1 then
-        food_site_vector = {x = 0, y = 0}
-    end
-
-    return food_site_vector
-end
-
 function setWheelSpeedsFromVector(vector)
 
-    robot.vectors = { { x = normaliseVectorLength(vector).x, y = normaliseVectorLength(vector).y, color = "yellow" } }
+    -- robot.vectors = { { x = normaliseVectorLength(vector).x, y = normaliseVectorLength(vector).y, color = "yellow" } }
 
     -- Normalise angle of vector
     local heading_angle = normaliseAngle(getVectorAngleDegrees(vector))
