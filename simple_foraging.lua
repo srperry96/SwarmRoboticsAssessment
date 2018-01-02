@@ -47,8 +47,9 @@ function waiting()
         robot.range_and_bearing.set_data(1, robot.food_value)
     --finished waiting, so change state and stop broadcasting
     else
-        robot.range_and_bearing.set_data(1,0)
-        robot.range_and_bearing.set_data(2,robot.food_value)
+        robot.range_and_bearing.set_data(1, 0)
+        current_wait_steps = 3 * robot.food_value
+        robot.range_and_bearing.set_data(2, current_wait_steps)
         robot.leds.set_all_colors("green")
         robot.state = "returning"
     end
@@ -58,11 +59,11 @@ function foraging()
 
     -- If the robot has picked up a food item
     if robot.has_food then
-        robot.wheels.set_velocity(0,0)
+        robot.wheels.set_velocity(0, 0)
         robot.state = "waiting"
         robot.leds.set_all_colors("green")
         --robot wait steps is lower for lower food values
-        current_wait_steps = robot.food_value
+        current_wait_steps = 2 * robot.food_value
 
     -- If the robot doesn't have a food item
     else
@@ -72,9 +73,8 @@ function foraging()
             setWheelSpeedsFromVector(subtractVectors(getAvoidanceVector(), getLightVector()))
         -- If the robot is outside the nest
         else
-            setWheelSpeedsFromVector(addVectors(getAvoidanceVector(), getFoodSiteVector()))
-            ---- Just avoid obstacles
-            --setWheelSpeedsFromVector(getAvoidanceVector())
+            --avoid obstacles while heading towards the food source
+            setWheelSpeedsFromVector(addVectors(getAvoidanceVector(), getFoodSourceVector()))
         end
     end
 
@@ -88,11 +88,19 @@ function returning()
         robot.leds.set_all_colors("red")
         robot.state = "foraging"
         --reset range and bearing data
-        robot.range_and_bearing.set_data(2,0)
+        robot.range_and_bearing.set_data(2, 0)
     -- If the robot has a food item
     else
+        --robot broadcasts that it has food, with value decaying to nothing over time
+        --thus, robots closer to the food source will broadcast a higher value.
+        --foraging bots can move towards the highest value detected to get closer to the food source
+        if current_wait_steps > 0 then
+            current_wait_steps = current_wait_steps - 1
+            robot.range_and_bearing.set_data(2, current_wait_steps)
+        end
         -- Perform phototaxis, while avoiding obstacles
         setWheelSpeedsFromVector(addVectors(getAvoidanceVector(), getLightVector()))
+        
     end
 
 end
@@ -138,31 +146,28 @@ function getLightVector()
 
 end
 
-function getFoodSiteVector()
-    local food_site_vector = {x = 0, y = 0}
-    local count = 0
+function getFoodSourceVector()
+    local food_source_vector = { x = 0, y = 0 }
+    local temp = 0
 
     for i = 1, #robot.range_and_bearing do
         --if nest 15 is detected, set heading for that and break
         if robot.range_and_bearing[i].data[1] == 15 then
-            food_site_vector = newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing)
+            food_source_vector = newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing)
             count = -1
             break
-        --if robots carrying food value 15 are detected, travel to centre of mass of them
-        elseif robot.range_and_bearing[i].data[2] == 15 then
-            count = count + 1
-            food_site_vector = addVectors(food_site_vector, newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing))
+        --else turn towards the highest broadcasted food value in the second range and bearing location
+        --this value decays as the robots travel back towards the nest, so robots without food should not
+        --follow robots with food back to the nest    
+        elseif robot.range_and_bearing[i].data[2] > 0 then
+            if robot.range_and_bearing[i].data[2] > temp then
+                food_source_vector = newVectorFromPolarCoordinates(robot.range_and_bearing[i].range, robot.range_and_bearing[i].horizontal_bearing)
+                temp = robot.range_and_bearing[i].data[2]
+            end
         end
     end
 
-    --if only one robot carrying food is detected, and two bots move towards it, they can end up
-    --trapping it in a corner. so dont follow a single robot. only move towards a group of bots
-    --with food
-    if count == 1 then
-        food_site_vector = {x = 0, y = 0}
-    end
-
-    return food_site_vector
+    return food_source_vector
 end
 
 function setWheelSpeedsFromVector(vector)
