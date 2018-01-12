@@ -19,8 +19,27 @@ const double upper_y = (arena_width / 2) - foraging_site_radius;
 
 void CForagingLoopFunctions::Init(TConfigurationNode& t_node)
 {
-    // Create a new random number generator
-    random_number_generator = CRandom::CreateRNG("argos");
+    int random_seed = 0;
+
+    // Read random seed from the ARGoS configuration file
+    try
+    {
+        TConfigurationNode& configuration_tree = CSimulator::GetInstance().GetConfigurationRoot();
+        TConfigurationNode& framework_node = GetNode(configuration_tree, "framework");
+        TConfigurationNode& experiment_node = GetNode(framework_node, "experiment");
+
+        GetNodeAttribute(experiment_node, "random_seed", random_seed);
+    }
+    catch(CARGoSException& ex)
+    {
+        THROW_ARGOSEXCEPTION_NESTED("Error parsing random seed!", ex);
+    }
+
+    // Create a new category based on the random seed
+    CRandom::CreateCategory("loop_functions_category", random_seed);
+
+    // Create a new random number generator in this category
+    random_number_generator = CRandom::CreateRNG("loop_functions_category");
 
     // Zero the food item counters
     for(int i = 0; i < number_of_foraging_sites; i++)

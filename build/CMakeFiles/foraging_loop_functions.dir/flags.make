@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++11 -fPIC   -fPIC -std=gnu++14
 
 CXX_DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -Dforaging_loop_functions_EXPORTS
 
-CXX_INCLUDES = -I/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build -I/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/src -I/usr/include/lua5.2 -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 
+CXX_INCLUDES = -I/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/build -I/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/src -I/usr/include/lua5.2 -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 
 

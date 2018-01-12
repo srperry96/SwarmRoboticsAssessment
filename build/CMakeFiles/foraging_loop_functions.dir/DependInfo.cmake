@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/src/foraging_loop_functions.cpp" "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_loop_functions.cpp.o"
-  "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/foraging_loop_functions_automoc.cpp" "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_loop_functions_automoc.cpp.o"
-  "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/src/foraging_qt_user_functions.cpp" "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_qt_user_functions.cpp.o"
+  "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/src/foraging_loop_functions.cpp" "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_loop_functions.cpp.o"
+  "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/build/foraging_loop_functions_automoc.cpp" "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_loop_functions_automoc.cpp.o"
+  "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/src/foraging_qt_user_functions.cpp" "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/build/CMakeFiles/foraging_loop_functions.dir/foraging_qt_user_functions.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -21,7 +21,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "."
-  "/home/sam/Documents/MSc/SwarmIntelligence/SwarmRoboticsAssessment/src"
+  "/home/sam/Documents/MScIR/SwarmIntelligence/SwarmRoboticsAssessment/src"
   "/usr/include/lua5.2"
   "/usr/include/x86_64-linux-gnu/qt5"
   "/usr/include/x86_64-linux-gnu/qt5/QtWidgets"
